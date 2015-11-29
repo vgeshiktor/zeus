@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile src/Makefile doc/Makefile examples/Makefile man/Makefile scripts/Makefile src/hermes/Makefile src/apollo/Makefile src/infra/Makefile src/infra/process/Makefile"
+config_files=" Makefile src/Makefile doc/Makefile examples/Makefile man/Makefile scripts/Makefile src/hermes/Makefile src/apollo/Makefile src/cerberus/Makefile src/infra/Makefile src/infra/process/Makefile"
 config_headers=" config.h"
 config_commands=" depfiles"
 
@@ -556,6 +556,7 @@ do
     "scripts/Makefile") CONFIG_FILES="$CONFIG_FILES scripts/Makefile" ;;
     "src/hermes/Makefile") CONFIG_FILES="$CONFIG_FILES src/hermes/Makefile" ;;
     "src/apollo/Makefile") CONFIG_FILES="$CONFIG_FILES src/apollo/Makefile" ;;
+    "src/cerberus/Makefile") CONFIG_FILES="$CONFIG_FILES src/cerberus/Makefile" ;;
     "src/infra/Makefile") CONFIG_FILES="$CONFIG_FILES src/infra/Makefile" ;;
     "src/infra/process/Makefile") CONFIG_FILES="$CONFIG_FILES src/infra/process/Makefile" ;;
 

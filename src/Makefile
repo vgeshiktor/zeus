@@ -260,7 +260,7 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-SUBDIRS = infra hermes apollo
+SUBDIRS = infra hermes apollo cerberus
 AM_CXXFLAGS = --pedantic -Wall -std=c++11 -g3 -O0
 AM_CFLAGS = --pedantic -Wall -std=c++11 -g3 -O0
 all: all-recursive
