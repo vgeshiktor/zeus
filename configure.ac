@@ -36,4 +36,5 @@ AC_CHECK_HEADER_STDBOOL
 
 AC_OUTPUT(Makefile src/Makefile doc/Makefile examples/Makefile man/Makefile
 		  scripts/Makefile src/hermes/Makefile src/apollo/Makefile
-		  src/cerberus/Makefile src/infra/Makefile src/infra/process/Makefile)
+		  src/cerberus/Makefile src/infra/Makefile src/infra/process/Makefile
+		  src/infra/msgqueue/Makefile)
