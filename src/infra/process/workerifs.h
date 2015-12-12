@@ -2,17 +2,26 @@
  ** File Name : workerifs.h
  ** Purpose :                                                
  ** Creation Date : Nov 29, 2015
- ** Last Modified : Sun 29 Nov 2015 03:48:07 PM IST
+ ** Last Modified : Sat 05 Dec 2015 11:10:17 AM IST
  ** Created By : vadim
  **/
 
-namespace process
+#include <inttypes.h>
+
+namespace infra
 {
-	class workerifs
+	namespace process
 	{
-		public:
-			virtual bool init() = 0;
-			virtual void run() = 0;
-	};
+		class workerifs
+		{
+			public:
+				virtual bool init(const char* name, uint16_t index) = 0;
+				virtual void run() = 0;
+
+			protected:
+				virtual bool createmq(const char* name) = 0;
+				virtual void processmsg(const char* msg, uint16_t len) = 0;
+		};
+	}
 }
 
