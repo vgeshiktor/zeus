@@ -2,7 +2,7 @@
  ** File Name : managerbase.cpp
  ** Purpose :                                                
  ** Creation Date : Nov 08, 2015
- ** Last Modified : Mon 30 Nov 2015 03:33:22 PM IST
+ ** Last Modified : Tue 15 Dec 2015 10:12:38 PM IST
  ** Created By : vadim
  **/
 
@@ -10,8 +10,12 @@
 #include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sstream>
 #include "config.h"
 #include "managerbase.h"
+#include "mqposixfactory.h"
+
+#define MAX_MSG_SIZE 1024
 
 namespace infra
 {
@@ -25,9 +29,63 @@ namespace infra
 		{
 		}
 
-		bool managerbase::init()
+		bool managerbase::init(int, char* argv[])
 		{
+			// build manager message queue name
+			std::string qname = buildQname(argv[0]);
+
+			// create message queue object
+			infra::msgqueue::mqposixfactory factory;
+			m_queue = factory.createmq();
+			if(!m_queue)
+				return false;
+
+			// open message queue
+			if(!m_queue->open(qname.c_str(), true))
+				return false;
+
+			// create workers
+			int count = workerscount();
+			m_workers.resize(count);
+			for(int i = 0; i < count; i++)
+				m_workers.push_back(createworker());
+
+			// initialize workers
+			auto i = 0;
+			for(auto& worker : m_workers)
+				worker->init(argv[0], i++);
+
 			return true;
+		}
+
+		void managerbase::run()
+		{
+			unsigned prio;
+			char mymsg[MAX_MSG_SIZE] = {0};
+
+			// start all workers - currently started automatically
+
+			// create message loop for the worker
+			while(1)
+			{
+				if(m_queue->receive(mymsg, MAX_MSG_SIZE, &prio))
+				{
+					// check first for exit message
+					if(0 == strcmp("quit", mymsg))
+						break;
+					else // process rest of the messages
+						processmsg(mymsg, MAX_MSG_SIZE);
+				}
+				else
+				{
+					// TODO: error handling
+					fprintf(stderr, "failed to receive message from message queue\n");
+				}
+			}
+
+			// wait for all workers for finish
+			for(auto& worker : m_workers)
+				worker->join();
 		}
 
 		void managerbase::parsecmdline(int argc, char* argv[])
@@ -82,6 +140,7 @@ namespace infra
 					"--version, -v\t\t - show version info\n",
 					pname);
 		}
+
 		void managerbase::showversion(const char* procname)
 		{
 			char* pname;
@@ -105,6 +164,14 @@ namespace infra
 					"There is NO WARRANTY, to the extent permitted by law.\n",
 					pname,
 					PACKAGE_VERSION);
+		}
+
+		std::string managerbase::buildQname(const char* name)
+		{
+			std::stringstream ss;
+			ss << name;
+
+			return ss.str();
 		}
 	}
 }

@@ -2,7 +2,7 @@
  ** File Name : workerbase.cpp
  ** Purpose :                                                
  ** Creation Date : Nov 30, 2015
- ** Last Modified : Sat 05 Dec 2015 11:11:09 AM IST
+ ** Last Modified : Tue 15 Dec 2015 09:38:29 PM IST
  ** Created By : vadim
  **/
 
@@ -64,8 +64,15 @@ namespace infra {
 				else
 				{
 					// TODO: error handling
+					fprintf(stderr, "failed to receive message from message queue\n");
 				}
 			}
+		}
+
+		void workerbase::join()
+		{
+			if(m_thread.joinable())
+				m_thread.join();
 		}
 
 		std::string workerbase::buildQname(const char* name, uint16_t index)

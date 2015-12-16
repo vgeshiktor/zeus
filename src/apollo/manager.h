@@ -2,22 +2,28 @@
  ** File Name : manager.h
  ** Purpose :                                                
  ** Creation Date : Nov 29, 2015
- ** Last Modified : Sun 29 Nov 2015 04:12:18 PM IST
+ ** Last Modified : Tue 15 Dec 2015 11:00:12 PM IST
  ** Created By : vadim
  **/
 
-#include <stdio.h>
+#include <memory>
 #include "managerbase.h"
 
 namespace apollo
 {
-	class manager : public process::managerbase
+	class manager final : public infra::process::managerbase
 	{
 		public:
 			manager();
 			virtual ~manager();
 
-			bool init(int argc, char* argv[]);
-			void run();
+		private: 	
+			// currently hard coded, 
+			// will be taken from configuration lately
+			int workerscount() 
+			{ return 3; }
+
+			void processmsg(const char* msg, uint16_t len);
+			std::unique_ptr<infra::process::workerifs> createworker();
 	};
 }

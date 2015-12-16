@@ -2,7 +2,7 @@
  ** File Name : managerifs.h
  ** Purpose :                                                
  ** Creation Date : Nov 08, 2015
- ** Last Modified : Mon 30 Nov 2015 03:32:29 PM IST
+ ** Last Modified : Tue 15 Dec 2015 10:35:08 PM IST
  ** Created By : vadim
  **/
 
@@ -22,6 +22,8 @@ namespace infra
 				virtual void parsecmdline(int argc, char* argv[]) = 0;
 				virtual void showhelp(const char* procname) = 0;
 				virtual void showversion(const char* procname) = 0;
+				virtual int workerscount() = 0;
+				virtual std::unique_ptr<workerifs> createworker() = 0;
 		};
 	}
 }

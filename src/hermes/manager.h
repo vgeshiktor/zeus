@@ -2,7 +2,7 @@
  ** File Name : manager.h
  ** Purpose :                                                
  ** Creation Date : Nov 07, 2015
- ** Last Modified : Sun 29 Nov 2015 04:11:55 PM IST
+ ** Last Modified : Tue 15 Dec 2015 10:52:40 PM IST
  ** Created By : vadim
  **/
 
@@ -11,7 +11,7 @@
 
 namespace hermes
 {
-	class manager : public process::managerbase
+	class manager : public infra::process::managerbase
 	{
 		public:
 			manager();

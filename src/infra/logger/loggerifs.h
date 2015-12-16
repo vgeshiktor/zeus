@@ -2,7 +2,7 @@
  ** File Name : loggerifs.h
  ** Purpose :                                                
  ** Creation Date : Dec 09, 2015
- ** Last Modified : Wed 09 Dec 2015 11:52:36 PM IST
+ ** Last Modified : Sat 12 Dec 2015 12:12:05 PM IST
  ** Created By : vadim
  **/
 
@@ -14,9 +14,9 @@ namespace infra {
 		class loggerifs
 		{
 			public:
-				void log(int nLogLevel, char* msg) = 0;
-				bool isLevelEnabled(int nLogLevel) = 0;
-				void forcedlog(int nLogLevel, char* msg) = 0;
+				virtual void log(int nLogLevel, char* msg) = 0;
+				virtual bool isLevelEnabled(int nLogLevel) = 0;
+				virtual void forcedlog(int nLogLevel, char* msg) = 0;
 		};
 	}
 }

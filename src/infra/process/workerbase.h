@@ -2,7 +2,7 @@
  ** File Name : workerbase.h
  ** Purpose :                                                
  ** Creation Date : Nov 29, 2015
- ** Last Modified : Sat 05 Dec 2015 11:15:25 AM IST
+ ** Last Modified : Tue 15 Dec 2015 10:32:05 PM IST
  ** Created By : vadim
  **/
 
@@ -22,11 +22,13 @@ namespace infra
 				workerbase();
 				virtual ~workerbase();
 
-				bool init(const char* name, uint16_t index);
-				void run();
+				bool init(const char* name, uint16_t index) final;
+				void run() final;
+				void join() final;
 
 			protected:
 				bool createmq(const char* name);
+
 
 			private:
 				std::string buildQname(const char* name, uint16_t index);

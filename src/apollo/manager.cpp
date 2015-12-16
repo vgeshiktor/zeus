@@ -2,11 +2,12 @@
  ** File Name : manager.cpp
  ** Purpose :                                                
  ** Creation Date : Nov 08, 2015
- ** Last Modified : Sun 29 Nov 2015 04:22:17 PM IST
+ ** Last Modified : Tue 15 Dec 2015 11:07:03 PM IST
  ** Created By : vadim
  **/
 
 #include "manager.h"
+#include "worker.h"
 
 namespace apollo
 {
@@ -18,24 +19,13 @@ namespace apollo
 	{
 	}
 
-	bool manager::init(int argc, char* argv[])
+	void manager::processmsg(const char* msg, uint16_t /* len */)
 	{
-		// parse command line
-		parsecmdline(argc, argv);
-
-		// create message queue to manage this process
-
-		// create workers
-
-		return true;
+		printf("%s\n", msg);	
 	}
 
-	void manager::run()
+	std::unique_ptr<infra::process::workerifs> manager::createworker()
 	{
-		// start all workers
-
-		// process message queue messages
-
-		// wait for all workers to finish
+		return std::unique_ptr<infra::process::workerifs>(new worker);
 	}
 }
