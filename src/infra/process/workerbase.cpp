@@ -2,7 +2,7 @@
  ** File Name : workerbase.cpp
  ** Purpose :                                                
  ** Creation Date : Nov 30, 2015
- ** Last Modified : Tue 15 Dec 2015 09:38:29 PM IST
+ ** Last Modified : Sun 20 Dec 2015 09:52:22 PM IST
  ** Created By : vadim
  **/
 
@@ -67,6 +67,8 @@ namespace infra {
 					fprintf(stderr, "failed to receive message from message queue\n");
 				}
 			}
+
+			printf("worker thread finished\n");
 		}
 
 		void workerbase::join()
@@ -81,6 +83,12 @@ namespace infra {
 			ss << name << index;
 
 			return ss.str();
+		}
+
+		void workerbase::sendselfquitmsg()
+		{
+			if(!m_queue->send("quit", 4, 0))
+				printf("failed to send quit message\n");
 		}
 	}
 }

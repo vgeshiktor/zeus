@@ -2,7 +2,7 @@
  ** File Name : managerbase.cpp
  ** Purpose :                                                
  ** Creation Date : Nov 08, 2015
- ** Last Modified : Tue 15 Dec 2015 10:12:38 PM IST
+ ** Last Modified : Sun 20 Dec 2015 09:51:07 PM IST
  ** Created By : vadim
  **/
 
@@ -29,10 +29,16 @@ namespace infra
 		{
 		}
 
-		bool managerbase::init(int, char* argv[])
+		bool managerbase::init(int argc, char* argv[])
 		{
+			// init process name
+			initprocname(argv[0]);
+
+			// parse command line
+			parsecmdline(argc, argv);
+
 			// build manager message queue name
-			std::string qname = buildQname(argv[0]);
+			std::string qname = buildQname(m_procname.c_str());
 
 			// create message queue object
 			infra::msgqueue::mqposixfactory factory;
@@ -46,14 +52,16 @@ namespace infra
 
 			// create workers
 			int count = workerscount();
-			m_workers.resize(count);
-			for(int i = 0; i < count; i++)
-				m_workers.push_back(createworker());
+			if(count)
+			{
+				for(int i = 0; i < count; i++)
+					m_workers.push_back(createworker());
 
-			// initialize workers
-			auto i = 0;
-			for(auto& worker : m_workers)
-				worker->init(argv[0], i++);
+				// initialize workers
+				auto i = 0;
+				for(auto& worker : m_workers)
+					worker->init(m_procname.c_str(), i++);
+			}
 
 			return true;
 		}
@@ -63,8 +71,6 @@ namespace infra
 			unsigned prio;
 			char mymsg[MAX_MSG_SIZE] = {0};
 
-			// start all workers - currently started automatically
-
 			// create message loop for the worker
 			while(1)
 			{
@@ -72,7 +78,17 @@ namespace infra
 				{
 					// check first for exit message
 					if(0 == strcmp("quit", mymsg))
+					{
+						printf("sending quit message to worker threads\n");
+
+						// send quit to all worker threads
+						for(auto& worker : m_workers)
+						{
+							// send to each worker quit message
+							worker->sendselfquitmsg();
+						}
 						break;
+					}
 					else // process rest of the messages
 						processmsg(mymsg, MAX_MSG_SIZE);
 				}
@@ -172,6 +188,18 @@ namespace infra
 			ss << name;
 
 			return ss.str();
+		}
+
+		void managerbase::initprocname(const char* pname)
+		{
+			char* p = (char*) strrchr(pname, '/');
+			m_procname = ++p;
+		}
+
+		void managerbase::sendselfquitmsg()
+		{
+			if(!m_queue->send("quit", 4, 0))
+				printf("failed to send quit message\n");
 		}
 	}
 }

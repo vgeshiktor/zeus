@@ -2,7 +2,7 @@
  ** File Name : mqposixfactory.h
  ** Purpose :                                                
  ** Creation Date : Dec 02, 2015
- ** Last Modified : Tue 15 Dec 2015 11:27:28 PM IST
+ ** Last Modified : Wed 16 Dec 2015 08:56:44 PM IST
  ** Created By : vadim
  **/
 
@@ -23,7 +23,7 @@ namespace infra
 				{
 				}
 
-				virtual ~mqposiximpl()
+				virtual ~mqposixfactory()
 				{
 				}
 

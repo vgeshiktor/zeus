@@ -2,7 +2,7 @@
  ** File Name : mqposiximpl.cpp
  ** Purpose :                                                
  ** Creation Date : Nov 30, 2015
- ** Last Modified : Mon 14 Dec 2015 11:48:57 PM IST
+ ** Last Modified : Sun 20 Dec 2015 10:27:48 PM IST
  ** Created By : vadim
  **/
 
@@ -53,11 +53,20 @@ namespace infra
 
 			if(isOwner)
 			{
-				//mq_attr attr = {0};
-				//attr.mq_maxmsg = 2000;
-				//attr.mq_msgsize = 1000;
+				mq_attr attr = mq_attr();
+				attr.mq_maxmsg = 2000;
+				attr.mq_msgsize = 1000;
 
-				m_mqdes = mq_open(m_qname.c_str(), O_RDONLY | O_CREAT, S_IRWXU, NULL /* &attr */);
+				m_mqdes = mq_open(m_qname.c_str(), O_RDWR | O_CREAT, S_IRWXU, &attr);
+
+				{
+					// TODO: debug only, should be removed
+					mq_attr attr;
+					if(getattr(&attr))
+						printf("maxmsg=%ld, msgsize=%ld\n", attr.mq_maxmsg, attr.mq_msgsize);
+				}
+
+				//m_mqdes = mq_open(m_qname.c_str(), O_RDONLY | O_CREAT, S_IRWXU, &attr);
 			}
 			else
 				m_mqdes = mq_open(m_qname.c_str(), O_WRONLY);
@@ -105,6 +114,9 @@ namespace infra
 			}
 
 			int res = mq_receive(m_mqdes, msg, len, prio);
+			if(res)
+				msg[res] = 0;
+
 			m_errno = errno;
 
 			return -1 != res;
@@ -215,9 +227,10 @@ namespace infra
 	}
 }
 
-
+#if defined(TEST)
 int main(int argc, char* argv[])
 {
+#endif /* defined(TEST) */
 #if defined(SERVER) || defined(CLIENT)
 	char* msg = 2 == argc ? argv[1] : (char*)"test message";
 #endif /* defined(SERVER) || defined(CLIENT) */
@@ -306,7 +319,8 @@ int main(int argc, char* argv[])
 		}
 	}
 #endif /* SERVER */
-
+#if defined(TEST)
 	return 0;
 }
+#endif /* defined(TEST) */
 

@@ -2,7 +2,7 @@
  ** File Name : managerbase.h
  ** Purpose :                                                
  ** Creation Date : Nov 08, 2015
- ** Last Modified : Tue 15 Dec 2015 10:54:57 PM IST
+ ** Last Modified : Sun 20 Dec 2015 09:10:53 PM IST
  ** Created By : vadim
  **/
 
@@ -23,6 +23,7 @@ namespace infra
 
 				bool init(int argc, char* argv[]) final;
 				void run() final;
+				void sendselfquitmsg() final;
 
 			protected:
 				void parsecmdline(int argc, char* argv[]);
@@ -33,7 +34,9 @@ namespace infra
 				std::string buildQname(const char* name);
 				bool init(const char*, uint16_t) final { return false; }
 				void join() final {}
+				void initprocname(const char* pname);
 
+				std::string 								m_procname;
 				std::unique_ptr<msgqueue::msgqueueifs>		m_queue;
 				std::vector< std::unique_ptr<workerifs> > 	m_workers;
 		};

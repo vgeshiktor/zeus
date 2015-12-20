@@ -2,7 +2,7 @@
  ** File Name : manager.h
  ** Purpose :                                                
  ** Creation Date : Nov 29, 2015
- ** Last Modified : Sun 29 Nov 2015 09:46:19 PM IST
+ ** Last Modified : Thu 17 Dec 2015 09:07:28 PM IST
  ** Created By : vadim
  **/
 
@@ -11,13 +11,19 @@
 
 namespace cerberus
 {
-	class manager : public process::managerbase
+	class manager : public infra::process::managerbase
 	{
 		public:
 			manager();
 			virtual ~manager();
 
-			bool init(int argc, char* argv[]);
-			void run();
+		private:
+			void processmsg(const char* msg, uint16_t);
+
+			int workerscount()
+			{ return 0; }
+
+			std::unique_ptr<infra::process::workerifs> createworker()
+			{ return NULL; }
 	};
 }

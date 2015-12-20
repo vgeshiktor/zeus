@@ -2,7 +2,7 @@
  ** File Name : worker.cpp
  ** Purpose :                                                
  ** Creation Date : Dec 15, 2015
- ** Last Modified : Tue 15 Dec 2015 10:40:27 PM IST
+ ** Last Modified : Wed 16 Dec 2015 10:34:56 PM IST
  ** Created By : vadim
  **/
 
@@ -17,7 +17,7 @@ namespace apollo {
 	{
 	}
 
-	void worker::processmsg(const char* msg, uint16_t len)
+	void worker::processmsg(const char* msg, uint16_t /* len */)
 	{
 		printf("%s\n", msg);
 	}

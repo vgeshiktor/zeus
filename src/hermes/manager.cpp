@@ -2,10 +2,11 @@
  ** File Name : manager.cpp
  ** Purpose :                                                
  ** Creation Date : Nov 08, 2015
- ** Last Modified : Mon 09 Nov 2015 11:02:52 AM IST
+ ** Last Modified : Wed 16 Dec 2015 10:44:02 PM IST
  ** Created By : vadim
  **/
 
+#include <stdio.h>
 #include "manager.h"
 
 namespace hermes
@@ -18,13 +19,13 @@ namespace hermes
 	{
 	}
 
-	bool manager::init(int argc, char* argv[])
+	void manager::processmsg(const char* msg, uint16_t /* len */)
 	{
-		parsecmdline(argc, argv);
-		return true;
+		printf("%s\n", msg);	
 	}
 
-	void manager::run()
+	std::unique_ptr<infra::process::workerifs> manager::createworker()
 	{
+		return std::unique_ptr<infra::process::workerifs>((workerifs*)NULL);
 	}
 }

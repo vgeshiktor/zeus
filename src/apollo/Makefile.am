@@ -5,6 +5,8 @@ AM_CPPFLAGS = -I../infra/msgqueue -I../infra/process
 
 # this lists the binaries to produce, the (non-PHONY, binary) targets in
 # the previous manual Makefile
-bin_PROGRAMS = apollo
-apollo_SOURCES = apollo.cpp manager.cpp manager.h worker.cpp worker.h
-apollo_LDADD = -L../infra/msgqueue -lmsgqueue -L../infra/process -lprocess
+bin_PROGRAMS = apollo client
+apollo_SOURCES = apollo.cpp manager.cpp worker.cpp 
+apollo_LDADD = -L../infra/process -lprocess -L../infra/msgqueue -lmsgqueue -lrt
+client_SOURCES = client.cpp
+client_LDADD = -L../infra/msgqueue -lmsgqueue -lrt

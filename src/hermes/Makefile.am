@@ -7,4 +7,4 @@ AM_CPPFLAGS = -I../infra/msgqueue -I../infra/process
 # the previous manual Makefile
 bin_PROGRAMS = hermes
 hermes_SOURCES = hermes.cpp manager.cpp manager.h
-hermes_LDADD = -L../infra/msgqueue -lmsgqueue -L../infra/process -lprocess
+hermes_LDADD = -L../infra/process -lprocess -L../infra/msgqueue -lmsgqueue -lrt

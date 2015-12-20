@@ -2,11 +2,11 @@
  ** File Name : manager.h
  ** Purpose :                                                
  ** Creation Date : Nov 07, 2015
- ** Last Modified : Tue 15 Dec 2015 10:52:40 PM IST
+ ** Last Modified : Wed 16 Dec 2015 10:43:02 PM IST
  ** Created By : vadim
  **/
 
-#include <stdio.h>
+#include "workerifs.h"
 #include "managerbase.h"
 
 namespace hermes
@@ -17,7 +17,13 @@ namespace hermes
 			manager();
 			virtual ~manager();
 
-			bool init(int argc, char* argv[]);
-			void run();
+		private: 	
+			// currently hard coded, 
+			// will be taken from configuration lately
+			int workerscount() 
+			{ return 3; }
+
+			void processmsg(const char* msg, uint16_t len);
+			std::unique_ptr<infra::process::workerifs> createworker();
 	};
 }

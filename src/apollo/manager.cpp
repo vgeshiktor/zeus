@@ -2,7 +2,7 @@
  ** File Name : manager.cpp
  ** Purpose :                                                
  ** Creation Date : Nov 08, 2015
- ** Last Modified : Tue 15 Dec 2015 11:07:03 PM IST
+ ** Last Modified : Sun 20 Dec 2015 10:10:25 PM IST
  ** Created By : vadim
  **/
 
@@ -29,3 +29,5 @@ namespace apollo
 		return std::unique_ptr<infra::process::workerifs>(new worker);
 	}
 }
+
+
