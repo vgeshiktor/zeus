@@ -2,7 +2,7 @@
  ** File Name : mqposiximpl.cpp
  ** Purpose :                                                
  ** Creation Date : Nov 30, 2015
- ** Last Modified : Sun 20 Dec 2015 10:27:48 PM IST
+ ** Last Modified : Sat 23 Jan 2016 02:11:05 AM IST
  ** Created By : vadim
  **/
 
@@ -19,7 +19,7 @@ namespace infra
 {
 	namespace msgqueue 
 	{
-		mqposiximpl::mqposiximpl() : m_mqdes(-1), m_errno(0)
+		mqposiximpl::mqposiximpl() : m_mqdes(-1)
 		{
 		}
 
@@ -27,32 +27,22 @@ namespace infra
 		{
 		}
 
-		bool mqposiximpl::open(const char* name, bool isOwner)
+		int mqposiximpl::open(const char* name, bool isOwner)
 		{
-			if(-1 != m_mqdes)
-			{
-				m_errno = EACCES;
-				return true;
-			}
+			if(valid())
+				return m_mqdes;
 
 			if(!name || !name[0])
-			{
-				m_errno = ENOENT;
-				return false;
-			}
-
-
+				return -1;
 
 			if(!isValidQname(name))
-			{
-				m_errno = ENOENT;
-				return false;
-			}
+				return -1;
 
 			buildQname(name);
 
 			if(isOwner)
 			{
+				// TODO: read values from configuration
 				mq_attr attr = mq_attr();
 				attr.mq_maxmsg = 2000;
 				attr.mq_msgsize = 1000;
@@ -71,143 +61,93 @@ namespace infra
 			else
 				m_mqdes = mq_open(m_qname.c_str(), O_WRONLY);
 
-			m_errno = errno;
-
-			return -1 != m_mqdes;
+			return m_mqdes;
 		}
 
-		bool mqposiximpl::close()
+		int mqposiximpl::close()
 		{
-			if(-1 == m_mqdes)
-			{
-				m_errno = EBADF;
-				return false;
-			}
+			if(!valid())
+				return -1;
 
 			int res = mq_close(m_mqdes);
-			m_errno = errno;
 			m_mqdes = -1;
 
-			return -1 != res;
+			return res;
 		}
 
-		bool mqposiximpl::send(const char* msg, size_t len, unsigned prio)
+		int mqposiximpl::send(const char* msg, size_t len, unsigned prio)
 		{
-			if(-1 == m_mqdes)
-			{
-				m_errno = EBADF;
-				return false;
-			}
+			if(!valid())
+				return -1;
 
-			int res = mq_send(m_mqdes, msg, len, prio);
-			m_errno = errno;
-
-			return -1 != res;
+			return mq_send(m_mqdes, msg, len, prio);
 		}
 
-		bool mqposiximpl::receive(char *msg, size_t len, unsigned* prio)
+		int mqposiximpl::receive(char *msg, size_t len, unsigned* prio)
 		{
-			if(-1 == m_mqdes)
-			{
-				m_errno = EBADF;
-				return false;
-			}
+			if(!valid())
+				return -1;
 
 			int res = mq_receive(m_mqdes, msg, len, prio);
 			if(res)
 				msg[res] = 0;
 
-			m_errno = errno;
-
-			return -1 != res;
+			return res;
 		}
 
-		bool mqposiximpl::timedsend(const char* msg, size_t len, unsigned prio, 
+		int mqposiximpl::timedsend(const char* msg, size_t len, unsigned prio, 
 				const struct timespec *abs_timeout)
 		{
-			if(-1 == m_mqdes)
-			{
-				m_errno = EBADF;
-				return false;
-			}
+			if(!valid())
+				return -1;
 
-			int res = mq_timedsend(m_mqdes, msg, len, prio, abs_timeout);
-			m_errno = errno;
-
-			return -1 != res;
+			return mq_timedsend(m_mqdes, msg, len, prio, abs_timeout);
 		}
 
-		bool mqposiximpl::timedreceive(char* msg, size_t len, unsigned* prio,
+		int mqposiximpl::timedreceive(char* msg, size_t len, unsigned* prio,
 				const struct timespec *abs_timeout)
 		{
-			if(-1 == m_mqdes)
-			{
-				m_errno = EBADF;
-				return false;
-			}
+			if(!valid())
+				return -1;
 
-			int res = mq_timedreceive(m_mqdes, msg, len, prio, abs_timeout);
-			m_errno = errno;
-
-			return -1 != res;
+			return mq_timedreceive(m_mqdes, msg, len, prio, abs_timeout);
 		}
 
-		bool mqposiximpl::notify(const struct sigevent* sevp)
+		int mqposiximpl::notify(const struct sigevent* sevp)
 		{
-			if(-1 == m_mqdes)
-			{
-				m_errno = EBADF;
-				return false;
-			}
+			if(!valid())
+				return -1;
 
-			int res = mq_notify(m_mqdes, sevp);
-			m_errno = errno;
-
-			return -1 != res;
+			return mq_notify(m_mqdes, sevp);
 		}
 
-		bool mqposiximpl::getattr(struct mq_attr* attr)
+		int mqposiximpl::getattr(struct mq_attr* attr)
 		{
-			if(-1 == m_mqdes)
-			{
-				m_errno = EBADF;
-				return false;
-			}
+			if(!valid())
+				return -1;
 
-			int res = mq_getattr(m_mqdes, attr);
-			m_errno = errno;
-
-			return -1 != res;
+			return mq_getattr(m_mqdes, attr);
 		}
 
-		bool mqposiximpl::setattr(struct mq_attr* newattr, struct mq_attr* oldattr)
+		int mqposiximpl::setattr(struct mq_attr* newattr, struct mq_attr* oldattr)
 		{
-			if(-1 == m_mqdes)
-			{
-				m_errno = EBADF;
-				return false;
-			}
+			if(valid())
+				return -1;
 
-			int res = mq_setattr(m_mqdes, newattr, oldattr);
-			m_errno = errno;
-
-			return -1 != res;
+			return mq_setattr(m_mqdes, newattr, oldattr);
 		}
 
-		bool mqposiximpl::unlink()
+		int mqposiximpl::unlink()
 		{
 			if(m_qname.empty())
 				return false;
 
-			int res = mq_unlink(m_qname.c_str());
-			m_errno = errno;
-
-			return -1 != res;
+			return mq_unlink(m_qname.c_str());
 		}
 
-		int mqposiximpl::getlasterror()
+		bool mqposiximpl::valid() const noexcept
 		{
-			return m_errno;
+			return -1 != m_mqdes;
 		}
 
 		bool mqposiximpl::isValidQname(const char* name)

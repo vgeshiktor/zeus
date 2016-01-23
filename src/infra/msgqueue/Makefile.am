@@ -6,4 +6,4 @@ AM_CPPFLAGS = -I../../
 # this lists the binaries to produce, the (non-PHONY, binary) targets in
 # the previous manual Makefile
 noinst_LIBRARIES = libmsgqueue.a
-libmsgqueue_a_SOURCES = mqposiximpl.cpp 
+libmsgqueue_a_SOURCES = mqposiximpl.cpp mqwrapper.cpp

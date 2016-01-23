@@ -2,7 +2,7 @@
  ** File Name : mqwrapper.h
  ** Purpose :                                                
  ** Creation Date : Jan 02, 2016
- ** Last Modified : Sat 02 Jan 2016 10:43:22 PM IST
+ ** Last Modified : Sun 03 Jan 2016 09:43:54 PM IST
  ** Created By : vadim
  **/
 
@@ -24,7 +24,7 @@ namespace infra {
 				bool send(const char* qname, const char *msg, size_t len, unsigned prio);
 
 			private:
-				std::unorderded_map<std::string,
+				std::unordered_map<std::string,
 					std::unique_ptr<msgqueue::msgqueueifs>> m_mqmap;
 		};
 	} // namespace msgqueue

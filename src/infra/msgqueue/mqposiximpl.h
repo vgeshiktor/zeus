@@ -2,7 +2,7 @@
  ** File Name : mqposiximpl.h
  ** Purpose :                                                
  ** Creation Date : Nov 30, 2015
- ** Last Modified : Fri 04 Dec 2015 06:26:30 PM IST
+ ** Last Modified : Fri 22 Jan 2016 08:55:57 PM IST
  ** Created By : vadim
  **/
 
@@ -27,17 +27,17 @@ namespace infra
 				mqposiximpl(mqposiximpl const&) = delete;
 				mqposiximpl& operator=(mqposiximpl const&) = delete;
 
-				bool open(const char* name, bool isOwner);
-				bool close();
-				bool send(const char* msg, size_t len, unsigned prio);
-				bool receive(char *msg, size_t len, unsigned* prio);
-				bool timedsend(const char* msg, size_t len, unsigned prio, const struct timespec *abs_timeout);
-				bool timedreceive(char *msg, size_t len, unsigned* prio, const struct timespec *abs_timeout);
-				bool notify(const struct sigevent* sevp);
-				bool getattr(struct mq_attr* attr);
-				bool setattr(struct mq_attr* newattr, struct mq_attr* oldattr);
-				bool unlink();
-				int getlasterror();
+				int open(const char* name, bool isOwner);
+				int close();
+				int send(const char* msg, size_t len, unsigned prio);
+				int receive(char *msg, size_t len, unsigned* prio);
+				int timedsend(const char* msg, size_t len, unsigned prio, const struct timespec *abs_timeout);
+				int timedreceive(char *msg, size_t len, unsigned* prio, const struct timespec *abs_timeout);
+				int notify(const struct sigevent* sevp);
+				int getattr(struct mq_attr* attr);
+				int setattr(struct mq_attr* newattr, struct mq_attr* oldattr);
+				int unlink();
+				bool valid() const noexcept;
 
 			private:
 				bool isValidQname(const char* name);
@@ -46,7 +46,6 @@ namespace infra
 			private:
 				std::string m_qname;
 				mqd_t m_mqdes;
-				int m_errno;
 		};
 	}
 }

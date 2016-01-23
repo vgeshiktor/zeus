@@ -2,11 +2,13 @@
  ** File Name : manager.h
  ** Purpose :                                                
  ** Creation Date : Nov 29, 2015
- ** Last Modified : Tue 15 Dec 2015 11:00:12 PM IST
+ ** Last Modified : Sun 03 Jan 2016 10:02:23 PM IST
  ** Created By : vadim
  **/
 
 #include <memory>
+#include <string>
+#include "mqwrapper.h"
 #include "managerbase.h"
 
 namespace apollo
@@ -25,5 +27,9 @@ namespace apollo
 
 			void processmsg(const char* msg, uint16_t len);
 			std::unique_ptr<infra::process::workerifs> createworker();
+
+			infra::msgqueue::mqwrapper m_mqwrapper;
+			uint64_t m_currThread;
+			std::string m_qname;
 	};
 }
